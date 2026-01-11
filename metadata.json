@@ -1,0 +1,7 @@
+{
+  "name": "NexusIMS - Advanced Product Management",
+  "description": "A high-performance product management system with role-based access control (Super Admin, Manager, Employee), inventory tracking, and sales analytics inspired by the clean UI of Google AI Studio.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
