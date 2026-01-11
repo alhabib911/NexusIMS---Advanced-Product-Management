@@ -19,6 +19,8 @@ export interface User {
   status: AccountStatus;
   avatar?: string;
   salary?: number;
+  level?: 1 | 2 | 3 | 4;
+  joinDate?: string;
 }
 
 export type PaymentMethod = 'Bank' | 'Mobile Banking' | 'Cash';
@@ -115,4 +117,14 @@ export interface CostRecord {
   category: string;
   amount: number;
   note: string;
+}
+
+export interface PayrollRecord {
+  id: string;
+  userId: string;
+  userName: string;
+  amount: number;
+  date: string;
+  status: 'PAID' | 'PENDING';
+  method: PaymentMethod;
 }

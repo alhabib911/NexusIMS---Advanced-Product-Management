@@ -14,7 +14,11 @@ import {
   ClipboardList,
   History,
   Truck,
-  Receipt
+  Receipt,
+  Briefcase,
+  Banknote,
+  FileClock,
+  Coins
 } from 'lucide-react';
 import { UserRole } from './types';
 
@@ -37,8 +41,19 @@ export const NAVIGATION_ITEMS = {
     { label: 'Stock Management', icon: <Boxes size={20} />, path: 'stock' },
     { label: 'Customer List', icon: <UserCircle size={20} />, path: 'customers' },
     { label: 'Company Cost', icon: <Receipt size={20} />, path: 'company-cost' },
+    { 
+      label: 'Employee Management', 
+      icon: <Briefcase size={20} />, 
+      path: 'employee-mgmt',
+      children: [
+        { label: 'Employees List', icon: <Users size={16} />, path: 'employees' },
+        { label: 'Payroll', icon: <Banknote size={16} />, path: 'payroll' },
+        { label: 'Leave Request', icon: <Calendar size={16} />, path: 'leave-admin' },
+        { label: 'Payroll History', icon: <FileClock size={16} />, path: 'payroll-history' },
+        { label: 'Management Cost', icon: <Coins size={16} />, path: 'mgmt-cost' },
+      ]
+    },
     { label: 'Loss & Profit', icon: <Wallet size={20} />, path: 'analytics' },
-    { label: 'Employee Leave', icon: <Calendar size={20} />, path: 'leave-admin' },
     { label: 'Reports', icon: <FileText size={20} />, path: 'reports' },
   ],
   [UserRole.MANAGER]: [
@@ -49,8 +64,18 @@ export const NAVIGATION_ITEMS = {
     { label: 'Customer Management', icon: <UserCircle size={20} />, path: 'customers' },
     { label: 'Stock Management', icon: <Boxes size={20} />, path: 'stock' },
     { label: 'Company Cost', icon: <Receipt size={20} />, path: 'company-cost' },
-    { label: 'Employee Mgmt', icon: <Users size={20} />, path: 'employees' },
-    { label: 'Leave Requests', icon: <Calendar size={20} />, path: 'leave-requests' },
+    { 
+      label: 'Employee Mgmt', 
+      icon: <Briefcase size={20} />, 
+      path: 'employee-mgmt',
+      children: [
+        { label: 'Employees List', icon: <Users size={16} />, path: 'employees' },
+        { label: 'Payroll', icon: <Banknote size={16} />, path: 'payroll' },
+        { label: 'Leave Requests', icon: <Calendar size={16} />, path: 'leave-requests' },
+        { label: 'Payroll History', icon: <FileClock size={16} />, path: 'payroll-history' },
+        { label: 'Management Cost', icon: <Coins size={16} />, path: 'mgmt-cost' },
+      ]
+    },
     { label: 'Reports', icon: <FileText size={20} />, path: 'reports' },
   ],
   [UserRole.EMPLOYEE]: [

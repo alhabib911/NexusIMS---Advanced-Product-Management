@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { User, UserRole, AccountStatus, Customer, SaleRecord, Product, PurchaseRecord, CostRecord } from './types';
+import { User, UserRole, AccountStatus, Customer, SaleRecord, Product, PurchaseRecord, CostRecord, PayrollRecord } from './types';
 import { Sidebar } from './components/Sidebar';
 import { Header } from './components/Header';
 import { DashboardOverview } from './components/DashboardOverview';
@@ -12,6 +12,7 @@ import { SalesManagement } from './components/SalesManagement';
 import { CustomerManagement } from './components/CustomerManagement';
 import { CompanyCostManagement } from './components/CompanyCostManagement';
 import { AnalyticsDashboard } from './components/AnalyticsDashboard';
+import { EmployeeManagement } from './components/EmployeeManagement'; // Import EmployeeManagement
 import { LoginForm, RegisterForm } from './components/AuthForms';
 import { Modal } from './components/ui/Modal';
 import { Button } from './components/ui/Button';
@@ -77,12 +78,11 @@ const App: React.FC = () => {
   const [products, setProducts] = useState<Product[]>(INITIAL_PRODUCTS);
   const [purchases, setPurchases] = useState<PurchaseRecord[]>(INITIAL_PURCHASES);
   const [costs, setCosts] = useState<CostRecord[]>([]);
+  const [payrolls, setPayrolls] = useState<PayrollRecord[]>([]); // New payroll state
   const [notificationsCleared, setNotificationsCleared] = useState(false);
 
   const lowStockItems = products.filter(p => p.stock < 10);
   
-  // If products change and we have new low stock items, maybe reset cleared flag?
-  // For simplicity, we just track if the user has "seen" the current batch.
   useEffect(() => {
     if (lowStockItems.length > 0) {
       setNotificationsCleared(false);
@@ -107,6 +107,7 @@ const App: React.FC = () => {
       email,
       role,
       status: AccountStatus.APPROVED,
+      level: 4 // Default level for logged-in user for now
     };
     setUser(newUser);
     localStorage.setItem('nexus_user', JSON.stringify(newUser));
@@ -208,6 +209,18 @@ const App: React.FC = () => {
       case 'customers': return <CustomerManagement customers={customers} />;
       case 'company-cost': return <CompanyCostManagement costs={costs} setCosts={setCosts} />;
       case 'analytics': return <AnalyticsDashboard sales={sales} purchases={purchases} costs={costs} />;
+      case 'employees': return <EmployeeManagement />; // Render EmployeeManagement
+      case 'payroll':
+      case 'payroll-history':
+      case 'mgmt-cost':
+      case 'leave-admin':
+      case 'leave-requests':
+        return (
+          <div className="h-96 flex flex-col items-center justify-center text-center p-12 bg-white rounded-3xl border border-dashed border-gray-200">
+            <h2 className="text-xl font-bold text-gray-900">Module Under Development</h2>
+            <p className="text-gray-500 mt-2">The <span className="font-bold text-blue-600 uppercase">{activePath}</span> module is being integrated.</p>
+          </div>
+        );
       default: return (
         <div className="h-96 flex flex-col items-center justify-center text-center p-12 bg-white rounded-3xl border border-dashed border-gray-200">
           <h2 className="text-xl font-bold text-gray-900">Module Under Construction</h2>
