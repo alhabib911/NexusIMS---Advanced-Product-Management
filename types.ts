@@ -11,16 +11,34 @@ export enum AccountStatus {
   REJECTED = 'REJECTED'
 }
 
+export interface SalaryDetails {
+  basic: number;
+  houseRent: number;
+  medical: number;
+  internetBill: number;
+  others: { name: string; amount: number }[];
+}
+
 export interface User {
   id: string;
   name: string;
   email: string;
+  password?: string; // Added for authentication
   role: UserRole;
   status: AccountStatus;
   avatar?: string;
-  salary?: number;
+  salary?: number; // General salary for simplicity if not using detailed breakdown
   level?: 1 | 2 | 3 | 4;
   joinDate?: string;
+  dateOfBirth?: string;
+  department?: string;
+  position?: string;
+  presentAddress?: string;
+  permanentAddress?: string;
+  contactNumber?: string;
+  educationalQualification?: string[];
+  extraCurricularActivity?: string[];
+  salaryDetails?: SalaryDetails;
 }
 
 export type PaymentMethod = 'Bank' | 'Mobile Banking' | 'Cash';
@@ -100,6 +118,7 @@ export interface SaleRecord {
   grandTotal: number;
   paymentMethod: PaymentMethod;
   provider?: MobilePaymentProvider;
+  employeeId?: string; // Added for 'My Sales' feature
 }
 
 export interface Customer {
@@ -123,8 +142,33 @@ export interface PayrollRecord {
   id: string;
   userId: string;
   userName: string;
-  amount: number;
+  department?: string;
+  position?: string;
+  month: string;
   date: string;
+  basicSalary: number;
+  houseRent: number;
+  medicalAllowance: number;
+  internetBillAllowance: number;
+  otherAllowances: { name: string; amount: number }[];
+  vatTaxDeduction: number;
+  bonus: number;
+  overtimePay: number;
+  netPay: number;
   status: 'PAID' | 'PENDING';
   method: PaymentMethod;
+}
+
+export interface LeaveRequest {
+  id: string;
+  userId: string;
+  userName: string;
+  type: 'Casual' | 'Sick' | 'Annual' | 'Unpaid';
+  reason: string;
+  startDate: string;
+  endDate: string;
+  status: 'PENDING' | 'APPROVED' | 'REJECTED';
+  approverId?: string;
+  requestDate: string; // New field
+  paidStatus?: 'PAID' | 'UNPAID'; // New field for approved leaves
 }

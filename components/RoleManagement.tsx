@@ -5,22 +5,19 @@ import { Button } from './ui/Button';
 import { User, UserRole, AccountStatus } from '../types';
 import { Check, X, Shield, User as UserIcon } from 'lucide-react';
 
-const mockUsers: User[] = [
-  { id: '1', name: 'John Doe', email: 'john@example.com', role: UserRole.SUPER_ADMIN, status: AccountStatus.APPROVED },
-  { id: '2', name: 'Sarah Miller', email: 'sarah@example.com', role: UserRole.MANAGER, status: AccountStatus.APPROVED },
-  { id: '3', name: 'Mike Ross', email: 'mike@example.com', role: UserRole.EMPLOYEE, status: AccountStatus.PENDING },
-  { id: '4', name: 'Jane Smith', email: 'jane@example.com', role: UserRole.EMPLOYEE, status: AccountStatus.PENDING },
-];
+interface RoleManagementProps {
+  employees: User[];
+  setEmployees: React.Dispatch<React.SetStateAction<User[]>>;
+}
 
-export const RoleManagement: React.FC = () => {
-  const [users, setUsers] = useState<User[]>(mockUsers);
+export const RoleManagement: React.FC<RoleManagementProps> = ({ employees, setEmployees }) => {
 
   const handleStatusChange = (userId: string, status: AccountStatus) => {
-    setUsers(users.map(u => u.id === userId ? { ...u, status } : u));
+    setEmployees(employees.map(u => u.id === userId ? { ...u, status } : u));
   };
 
   const handleRoleChange = (userId: string, role: UserRole) => {
-    setUsers(users.map(u => u.id === userId ? { ...u, role } : u));
+    setEmployees(employees.map(u => u.id === userId ? { ...u, role } : u));
   };
 
   const columns = [
@@ -74,7 +71,7 @@ export const RoleManagement: React.FC = () => {
             </button>
           </>
         )}
-        <button className="text-gray-400 hover:text-gray-600 p-1">Edit</button>
+        {u.status !== AccountStatus.PENDING && <button className="text-gray-400 hover:text-gray-600 p-1">Edit</button>}
       </div>
     )},
   ];
@@ -96,12 +93,12 @@ export const RoleManagement: React.FC = () => {
           </div>
           <div>
             <p className="text-xs font-bold text-amber-800 uppercase tracking-wider">Pending Approval</p>
-            <p className="text-2xl font-bold text-amber-900">{users.filter(u => u.status === AccountStatus.PENDING).length}</p>
+            <p className="text-2xl font-bold text-amber-900">{employees.filter(u => u.status === AccountStatus.PENDING).length}</p>
           </div>
         </div>
       </div>
 
-      <Table columns={columns} data={users} />
+      <Table columns={columns} data={employees} />
     </div>
   );
 };

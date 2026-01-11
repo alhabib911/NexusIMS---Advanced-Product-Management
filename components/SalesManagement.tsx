@@ -10,9 +10,11 @@ interface SalesManagementProps {
   products: Product[];
   sales: SaleRecord[];
   onSaleComplete: (sale: SaleRecord) => void;
+  activePath: string; // New prop to determine if it's 'my-sales'
+  currentUserId: string; // New prop to filter sales
 }
 
-export const SalesManagement: React.FC<SalesManagementProps> = ({ products, sales, onSaleComplete }) => {
+export const SalesManagement: React.FC<SalesManagementProps> = ({ products, sales, onSaleComplete, activePath, currentUserId }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isInvoiceOpen, setIsInvoiceOpen] = useState(false);
   const [selectedInvoice, setSelectedInvoice] = useState<SaleRecord | null>(null);
@@ -83,7 +85,8 @@ export const SalesManagement: React.FC<SalesManagementProps> = ({ products, sale
       bagCount: settlement.bagCount,
       grandTotal,
       paymentMethod: settlement.paymentMethod,
-      provider: settlement.paymentMethod === 'Mobile Banking' ? settlement.provider : undefined
+      provider: settlement.paymentMethod === 'Mobile Banking' ? settlement.provider : undefined,
+      employeeId: currentUserId // Assign current user as the seller
     };
 
     onSaleComplete(newSale);
@@ -138,6 +141,10 @@ export const SalesManagement: React.FC<SalesManagementProps> = ({ products, sale
     p.barcode.includes(searchQuery)
   );
 
+  const displayedSales = activePath === 'my-sales' 
+    ? sales.filter(s => s.employeeId === currentUserId) 
+    : sales;
+
   const columns = [
     { header: 'Sale ID', key: 'id', render: (s: SaleRecord) => <span className="font-mono font-bold text-blue-600">{s.id}</span> },
     { header: 'Date', key: 'date' },
@@ -171,7 +178,7 @@ export const SalesManagement: React.FC<SalesManagementProps> = ({ products, sale
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Sales History</h2>
+          <h2 className="text-2xl font-bold text-gray-900">{activePath === 'my-sales' ? 'My Sales History' : 'Sales History'}</h2>
           <p className="text-sm text-gray-500">Overview of all transactions and customer purchases.</p>
         </div>
         <Button onClick={() => setIsModalOpen(true)} className="shadow-lg shadow-blue-100">
@@ -190,7 +197,7 @@ export const SalesManagement: React.FC<SalesManagementProps> = ({ products, sale
         </div>
       </div>
 
-      <Table columns={columns} data={sales} />
+      <Table columns={columns} data={displayedSales} />
 
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="New Sales Transaction" maxWidth="max-w-[1100px]">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 min-h-[500px]">

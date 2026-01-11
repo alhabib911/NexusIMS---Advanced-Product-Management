@@ -130,7 +130,10 @@ export const Header: React.FC<HeaderProps> = ({
           
           <div className="h-8 w-[1px] bg-gray-100 mx-2"></div>
 
-          <div className="flex items-center gap-3 cursor-pointer group">
+          <button 
+            onClick={() => onNavigate('profile')} 
+            className="flex items-center gap-3 cursor-pointer group"
+          >
             <div className="text-right hidden sm:block">
               <p className="text-sm font-semibold text-gray-800 leading-tight">{user.name}</p>
               <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest leading-none mt-1">{user.role.replace('_', ' ')}</p>
@@ -138,7 +141,7 @@ export const Header: React.FC<HeaderProps> = ({
             <div className="h-9 w-9 rounded-full bg-blue-600 border-2 border-white shadow-sm flex items-center justify-center text-white font-bold text-sm">
               {user.name.charAt(0)}
             </div>
-          </div>
+          </button>
         </div>
       </div>
     </header>

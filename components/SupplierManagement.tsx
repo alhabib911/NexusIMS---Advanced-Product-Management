@@ -4,7 +4,7 @@ import { Table } from './ui/Table';
 import { Button } from './ui/Button';
 import { Modal } from './ui/Modal';
 import { Supplier, PaymentMethod, PaymentRecord } from '../types';
-import { Plus, Search, Phone, MapPin, Building2, CreditCard, Calendar, CheckCircle2, XCircle, History } from 'lucide-react';
+import { Plus, Search, Phone, MapPin, Building2, CreditCard, Calendar, CheckCircle2, XCircle, History, Wallet } from 'lucide-react';
 
 const INITIAL_SUPPLIERS: Supplier[] = [
   { 
@@ -272,6 +272,17 @@ export const SupplierManagement: React.FC = () => {
                     <div className="bg-white/10 p-4 rounded-xl backdrop-blur-sm">
                       <p className="text-[10px] font-bold uppercase text-blue-100 mb-1">Total Settled</p>
                       <p className="text-2xl font-bold">${selectedSupplier.totalPaid.toLocaleString()}</p>
+                      {/* Progress bar for paid vs total */}
+                      {selectedSupplier.totalPaid + selectedSupplier.totalDue > 0 && (
+                        <div className="mt-2 h-1.5 bg-white/30 rounded-full overflow-hidden">
+                          <div 
+                            className="h-full bg-white transition-all duration-500" 
+                            style={{ 
+                              width: `${((selectedSupplier.totalPaid / (selectedSupplier.totalPaid + selectedSupplier.totalDue)) * 100).toFixed(1)}%` 
+                            }} 
+                          />
+                        </div>
+                      )}
                     </div>
                  </div>
               </div>
@@ -366,6 +377,3 @@ export const SupplierManagement: React.FC = () => {
     </div>
   );
 };
-
-// Helper for icon since Wallet was missing in context but standard in Lucide
-import { Wallet } from 'lucide-react';

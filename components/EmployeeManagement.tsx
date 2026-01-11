@@ -3,21 +3,20 @@ import React, { useState } from 'react';
 import { Table } from './ui/Table';
 import { Button } from './ui/Button';
 import { User, UserRole, AccountStatus } from '../types';
-import { Users, UserPlus, Search, Filter, Shield, MoreHorizontal, Mail, Calendar } from 'lucide-react';
+import { Users, UserPlus, Search, Filter, Shield, MoreHorizontal, Mail, Calendar, ChevronDown } from 'lucide-react';
+import { EmployeeDetailsModal } from './EmployeeDetailsModal';
 
-const MOCK_EMPLOYEES: User[] = [
-  { id: '1', name: 'Arif Ahmed', email: 'arif@nexus.com', role: UserRole.MANAGER, level: 4, status: AccountStatus.APPROVED, joinDate: '2023-01-15', salary: 45000 },
-  { id: '2', name: 'Sara Khan', email: 'sara@nexus.com', role: UserRole.EMPLOYEE, level: 3, status: AccountStatus.APPROVED, joinDate: '2023-05-10', salary: 32000 },
-  { id: '3', name: 'Tanvir Hasan', email: 'tanvir@nexus.com', role: UserRole.EMPLOYEE, level: 2, status: AccountStatus.APPROVED, joinDate: '2023-08-22', salary: 28000 },
-  { id: '4', name: 'Mitu Akter', email: 'mitu@nexus.com', role: UserRole.EMPLOYEE, level: 1, status: AccountStatus.APPROVED, joinDate: '2024-02-01', salary: 22000 },
-  { id: '5', name: 'Rahat Islam', email: 'rahat@nexus.com', role: UserRole.EMPLOYEE, level: 1, status: AccountStatus.PENDING, joinDate: '2024-05-20', salary: 20000 },
-  { id: '6', name: 'Nusrat Jahan', email: 'nusrat@nexus.com', role: UserRole.EMPLOYEE, level: 2, status: AccountStatus.APPROVED, joinDate: '2023-11-01', salary: 27000 },
-  { id: '7', name: 'Fahim Rahman', email: 'fahim@nexus.com', role: UserRole.MANAGER, level: 3, status: AccountStatus.APPROVED, joinDate: '2022-09-01', salary: 38000 },
-];
+interface EmployeeManagementProps {
+  employees: User[];
+  setEmployees: React.Dispatch<React.SetStateAction<User[]>>;
+  currentUserRole: UserRole;
+}
 
-export const EmployeeManagement: React.FC = () => {
-  const [employees, setEmployees] = useState<User[]>(MOCK_EMPLOYEES);
+export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({ employees, setEmployees, currentUserRole }) => {
   const [search, setSearch] = useState('');
+  const [filterLevel, setFilterLevel] = useState<1 | 2 | 3 | 4 | 'all'>('all');
+  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
+  const [selectedEmployee, setSelectedEmployee] = useState<User | null>(null);
 
   const stats = {
     total: employees.length,
@@ -25,6 +24,17 @@ export const EmployeeManagement: React.FC = () => {
     level2: employees.filter(e => e.level === 2).length,
     level3: employees.filter(e => e.level === 3).length,
     level4: employees.filter(e => e.level === 4).length,
+  };
+
+  const filteredEmployees = employees
+    .filter(e => {
+      const matchesSearch = e.name.toLowerCase().includes(search.toLowerCase()) || e.email.toLowerCase().includes(search.toLowerCase());
+      const matchesLevel = filterLevel === 'all' || e.level === filterLevel;
+      return matchesSearch && matchesLevel;
+    });
+
+  const handleUpdateEmployee = (updatedEmployee: User) => {
+    setEmployees(employees.map(e => (e.id === updatedEmployee.id ? updatedEmployee : e)));
   };
 
   const columns = [
@@ -69,7 +79,10 @@ export const EmployeeManagement: React.FC = () => {
       </div>
     )},
     { header: 'Action', key: 'id', render: (u: User) => (
-      <button className="p-1 hover:bg-gray-50 rounded text-gray-400">
+      <button 
+        onClick={() => { setSelectedEmployee(u); setIsDetailsModalOpen(true); }}
+        className="p-1 hover:bg-gray-50 rounded text-gray-400"
+      >
         <MoreHorizontal size={16} />
       </button>
     )}
@@ -82,10 +95,7 @@ export const EmployeeManagement: React.FC = () => {
           <h2 className="text-2xl font-bold text-gray-900">Employee Management</h2>
           <p className="text-sm text-gray-500">Overview of staff hierarchy and performance levels.</p>
         </div>
-        <Button className="shadow-lg shadow-blue-50">
-          <UserPlus size={18} className="mr-2" />
-          Add Employee
-        </Button>
+        {/* Removed "Add Employee" Button as per request */}
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
@@ -117,12 +127,36 @@ export const EmployeeManagement: React.FC = () => {
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
-        <Button variant="outline" size="sm">
-          <Filter size={14} className="mr-2" /> Filter
-        </Button>
+        <div className="relative">
+          <Button variant="outline" size="sm" className="w-full justify-between pr-8">
+            <Filter size={14} className="mr-2" /> Filter by Level
+            <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2" />
+          </Button>
+          <select 
+            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+            value={filterLevel}
+            onChange={(e) => setFilterLevel(Number(e.target.value) as 1 | 2 | 3 | 4 | 'all')}
+          >
+            <option value="all">All Levels</option>
+            <option value={1}>Level 1</option>
+            <option value={2}>Level 2</option>
+            <option value={3}>Level 3</option>
+            <option value={4}>Level 4</option>
+          </select>
+        </div>
       </div>
 
-      <Table columns={columns} data={employees.filter(e => e.name.toLowerCase().includes(search.toLowerCase()))} />
+      <Table columns={columns} data={filteredEmployees} />
+
+      {selectedEmployee && (
+        <EmployeeDetailsModal
+          isOpen={isDetailsModalOpen}
+          onClose={() => setIsDetailsModalOpen(false)}
+          employee={selectedEmployee}
+          onUpdateEmployee={handleUpdateEmployee}
+          currentUserRole={currentUserRole}
+        />
+      )}
     </div>
   );
 };

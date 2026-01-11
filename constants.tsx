@@ -18,7 +18,7 @@ import {
   Briefcase,
   Banknote,
   FileClock,
-  Coins
+  BriefcaseBusiness, // For Employee Mgmt group icon
 } from 'lucide-react';
 import { UserRole } from './types';
 
@@ -43,14 +43,13 @@ export const NAVIGATION_ITEMS = {
     { label: 'Company Cost', icon: <Receipt size={20} />, path: 'company-cost' },
     { 
       label: 'Employee Management', 
-      icon: <Briefcase size={20} />, 
+      icon: <BriefcaseBusiness size={20} />, // Changed to BriefcaseBusiness
       path: 'employee-mgmt',
       children: [
         { label: 'Employees List', icon: <Users size={16} />, path: 'employees' },
         { label: 'Payroll', icon: <Banknote size={16} />, path: 'payroll' },
-        { label: 'Leave Request', icon: <Calendar size={16} />, path: 'leave-admin' },
+        { label: 'Leave Requests', icon: <Calendar size={16} />, path: 'leave-admin' }, // Changed path to leave-admin
         { label: 'Payroll History', icon: <FileClock size={16} />, path: 'payroll-history' },
-        { label: 'Management Cost', icon: <Coins size={16} />, path: 'mgmt-cost' },
       ]
     },
     { label: 'Loss & Profit', icon: <Wallet size={20} />, path: 'analytics' },
@@ -66,14 +65,13 @@ export const NAVIGATION_ITEMS = {
     { label: 'Company Cost', icon: <Receipt size={20} />, path: 'company-cost' },
     { 
       label: 'Employee Mgmt', 
-      icon: <Briefcase size={20} />, 
+      icon: <BriefcaseBusiness size={20} />, // Changed to BriefcaseBusiness
       path: 'employee-mgmt',
       children: [
         { label: 'Employees List', icon: <Users size={16} />, path: 'employees' },
         { label: 'Payroll', icon: <Banknote size={16} />, path: 'payroll' },
-        { label: 'Leave Requests', icon: <Calendar size={16} />, path: 'leave-requests' },
+        { label: 'Leave Requests', icon: <Calendar size={16} />, path: 'leave-admin' }, // Changed path to leave-admin
         { label: 'Payroll History', icon: <FileClock size={16} />, path: 'payroll-history' },
-        { label: 'Management Cost', icon: <Coins size={16} />, path: 'mgmt-cost' },
       ]
     },
     { label: 'Reports', icon: <FileText size={20} />, path: 'reports' },
@@ -81,9 +79,8 @@ export const NAVIGATION_ITEMS = {
   [UserRole.EMPLOYEE]: [
     { label: 'Dashboard', icon: <LayoutDashboard size={20} />, path: 'dashboard' },
     { label: 'My Sales', icon: <TrendingUp size={20} />, path: 'my-sales' },
-    { label: 'Attendance', icon: <Clock size={20} />, path: 'attendance' },
-    { label: 'Salary History', icon: <Wallet size={20} />, path: 'salary' },
-    { label: 'Leave Request', icon: <ClipboardList size={20} />, path: 'leave-new' },
-    { label: 'Leave History', icon: <History size={20} />, path: 'leave-history' },
+    { label: 'Salary History', icon: <Wallet size={20} />, path: 'salary-history' },
+    { label: 'Apply Leave', icon: <ClipboardList size={20} />, path: 'leave-new' }, // New path
+    { label: 'My Leave History', icon: <History size={20} />, path: 'leave-history' }, // New path
   ],
 };
